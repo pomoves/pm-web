@@ -2,8 +2,8 @@
   "entrypoint": "index.html",
   "shell": "src/pm-app.html",
   "fragments": [
-    "src/pm-view1.html",
-    "src/pm-view2.html",
-    "src/pm-view3.html"
+    "src/pm-timer.html",
+    "src/pm-tasks.html",
+    "src/pm-stats.html"
   ]
 }
