@@ -114,24 +114,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         page: {
           type: String,
           reflectToAttribute: true,
-          observer: '_pageChanged'
+          observer: '_pageChanged',
         },
 
       },
 
       observers: [
-        '_routePageChanged(routeData.page)'
+        '_routePageChanged(routeData.page)',
       ],
 
-      _routePageChanged: function(page) {
+      _routePageChanged: function (page) {
         this.page = page || 'timer';
       },
 
-      _pageChanged: function(page) {
+      _pageChanged: function (page) {
         // load page import on demand.
         this.importHref(
           this.resolveUrl('pm-' + page + '.html'), null, null, true);
-      }
+      },
 
     });
 
