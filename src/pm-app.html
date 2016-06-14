@@ -19,9 +19,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="my-icons.html">
+<link rel="import" href="pm-icons.html">
 
-<dom-module id="my-app">
+<dom-module id="pm-app">
 
   <template>
 
@@ -75,9 +75,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer>
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="view1" href="/view1">View One</a>
-          <a name="view2" href="/view2">View Two</a>
-          <a name="view3" href="/view3">View Three</a>
+          <a name="timer" href="/timer">View One</a>
+          <a name="tasks" href="/tasks">View Two</a>
+          <a name="stats" href="/stats">View Three</a>
         </iron-selector>
       </app-drawer>
 
@@ -87,14 +87,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div title>My App</div>
+            <div title>Pomoves</div>
           </app-toolbar>
         </app-header>
 
         <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
-          <my-view1 name="view1"></my-view1>
-          <my-view2 name="view2"></my-view2>
-          <my-view3 name="view3"></my-view3>
+          <pm-timer name="timer"></pm-timer>
+          <pm-tasks name="tasks"></pm-tasks>
+          <pm-stats name="stats"></pm-stats>
         </iron-pages>
 
       </app-header-layout>
@@ -107,7 +107,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     Polymer({
 
-      is: 'my-app',
+      is: 'pm-app',
 
       properties: {
 
@@ -124,13 +124,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
 
       _routePageChanged: function(page) {
-        this.page = page || 'view1';
+        this.page = page || 'timer';
       },
 
       _pageChanged: function(page) {
         // load page import on demand.
         this.importHref(
-          this.resolveUrl('my-' + page + '.html'), null, null, true);
+          this.resolveUrl('pm-' + page + '.html'), null, null, true);
       }
 
     });

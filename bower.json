@@ -1,7 +1,7 @@
 {
-  "name": "app-drawer-template",
+  "name": "pm-app",
   "authors": [
-    "The Polymer Authors"
+    "David Cruz"
   ],
   "private": true,
   "dependencies": {
