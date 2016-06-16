@@ -132,6 +132,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _routePageChanged: function (page) {
         this.page = page || 'timer';
+        Polymer.AppLayout.scroll({ top: 0, behavior: 'silent' });
         this.drawerOpened = false;
         this.fire('pageView', location.pathname + location.hash);
       },
@@ -140,6 +141,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // load page import on demand.
         this.importHref(
           this.resolveUrl('pm-' + page + '.html'), null, null, true);
+
+        this._ensureLazyLoaded();
+      },
+
+      _ensureLazyLoaded: function () {
+        // load lazy resources after render and set `loadComplete` when done.
+        if (!this.loadComplete) {
+          Polymer.RenderStatus.afterNextRender(this, function () {
+            this.importHref(this.resolveUrl('lazy-resources.html'), function () {
+              // Register service worker if supported.
+              if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/service-worker.js');
+              }
+
+              this.loadComplete = true;
+            });
+          });
+        }
       },
 
     });
