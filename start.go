@@ -1,14 +1,21 @@
 package start
 
 import (
-	"fmt"
 	"net/http"
+
+	"github.com/google/http2preload"
 )
 
+// init registers HTTP handlers.
 func init() {
-	http.HandleFunc("/", handler)
+	m, err := http2preload.ReadManifest("preload.json")
+	if err != nil {
+		panic(err)
+	}
+	http.Handle("/", m.Handler(handleRoot))
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "OK")
+// handleRoot serves the landing page.
+func handleRoot(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "index.html")
 }
