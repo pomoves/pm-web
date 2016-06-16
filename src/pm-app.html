@@ -73,10 +73,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-    <app-drawer-layout fullbleed>
+    <app-drawer-layout force-narrow="true" fullbleed>
 
       <!-- Drawer content -->
-      <app-drawer opened="{{drawerOpened}}">
+      <app-drawer opened="{{drawerOpened}}" >
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="timer" href="/timer">Timer</a>
