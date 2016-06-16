@@ -1,0 +1,18 @@
+<script>
+  var PMBehaviors = PMBehaviors || {};
+
+  PMBehaviors.AnalyticsBehavior = {
+    properties: {
+
+    },
+
+    listeners: {
+      pageView: '_trackPageView',
+    },
+
+    _trackPageView: function (e) {
+      ga('set', 'page', e.detail);
+      ga('send', 'pageview');
+    },
+  };
+</script>

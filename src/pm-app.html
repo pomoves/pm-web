@@ -19,6 +19,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="pm-analytics.html">
+<link rel="import" href="pm-analytics-behavior.html">
 <link rel="import" href="pm-icons.html">
 
 <dom-module id="pm-app">
@@ -111,6 +113,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       is: 'pm-app',
 
+      behaviors: [PMBehaviors.AnalyticsBehavior],
+
       properties: {
 
         page: {
@@ -127,6 +131,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _routePageChanged: function (page) {
         this.page = page || 'timer';
+        this.fire('pageView', location.pathname + location.hash);
       },
 
       _pageChanged: function (page) {
