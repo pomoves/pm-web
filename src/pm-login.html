@@ -1,0 +1,33 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="pm-login">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <span hidden$="[[user]]" on-tap="_login">Sign In</span>
+    <template is="dom-if" if="[[user]]">
+      <span on-tap="_logout">Sign Out</span>
+    </template>
+  </template>
+  <script>
+    Polymer({
+      is: 'pm-login',
+
+      properties: {
+        user: Object,
+      },
+
+      _login: function () {
+        this.fire('login');
+      },
+
+      _logout: function () {
+        this.fire('logout');
+      },
+
+    });
+  </script>
+</dom-module>
