@@ -10,9 +10,11 @@ import (
 func init() {
 	m, err := http2preload.ReadManifest("preload.json")
 	if err != nil {
-		panic(err)
+		// panic(err)
+		http.HandleFunc("/", handleRoot)
+	} else {
+		http.Handle("/", m.Handler(handleRoot))
 	}
-	http.Handle("/", m.Handler(handleRoot))
 }
 
 // handleRoot serves the landing page.
