@@ -4,6 +4,7 @@
   "fragments": [
     "src/pm-timer.html",
     "src/pm-tasks.html",
-    "src/pm-stats.html"
+    "src/pm-stats.html",
+    "src/pm-settings.html"
   ]
 }
