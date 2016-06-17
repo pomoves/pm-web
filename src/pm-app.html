@@ -64,6 +64,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding-left: 32px;
       }
 
+      iron-pages {
+        height: 100%;
+      }
 
     </style>
 
@@ -83,7 +86,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <pm-analytics key="UA-59834006-3"></pm-analytics>
 
-    <pm-data id="appData" user="[[user]]"></pm-data>
+    <pm-data id="appData" user="[[user]]" config="{{config}}" status="{{status}}"></pm-data>
 
     <app-location route="{{route}}"></app-location>
     <app-route
@@ -117,7 +120,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-header>
 
         <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
-          <pm-timer name="timer"></pm-timer>
+          <pm-timer name="timer"status="[[status]]" remaining="[[remaining]]"></pm-timer>
           <pm-tasks name="tasks"></pm-tasks>
           <pm-stats name="stats"></pm-stats>
         </iron-pages>

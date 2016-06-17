@@ -1,67 +1,157 @@
-<!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="pm-icons.html">
 
 <dom-module id="pm-timer">
-
   <template>
-
+    <style include="iron-flex"></style>
     <style>
       :host {
         display: block;
-        padding: 10px;
+        height: 100%;
+        background-color: var(--app-primary-color);
+        color: var(--app-secondary-color);
+        @apply(--layout-vertical);
       }
-      .card {
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-        padding: 16px;
-        margin: 24px;
-        border-radius: 5px;
-        background-color: #fff;
-        color: #757575;
+
+      :host[state='walk']{
+        background-color: var(--secondary-color);
       }
-      .circle {
-        display: inline-block;
-        height: 64px;
-        width: 64px;
-        border-radius: 50%;
-        background: #ddd;
-        line-height: 64px;
-        font-size: 30px;
-        color: #555;
+
+      .timer-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-bottom: 48px;
+      }
+
+      .timer {
         text-align: center;
+        font-size: 112px;
+        font-weight: 300;
       }
-      h1 {
-        font-size: 22px;
-        margin: 16px 0;
-        color: #212121;
+
+      .controls {
+        max-width: 600px;
+        width: 100%;
+        height: 72px;
+        margin: auto;
+        padding: 0 16px;
+        align-items: center;
+        box-sizing: border-box;
+      }
+
+      .playstop paper-fab{
+        margin: auto;
+      }
+
+      .steps {
+        text-align: right;
+      }
+
+      .controls span {
+        vertical-align: middle;
+        padding-left: 8px;
+        display: inline-block;
+        text-align: left;
+      }
+
+      paper-fab {
+        --paper-fab-keyboard-focus-background: var(--accent-color);
+      }
+
+      @media (min-width: 600px) {
+        :host {
+          padding: 48px 62px;
+        }
+        .timer {
+          font-size: 152px;
+        }
+      }
+
+      @media (min-width: 768px) {
+        .timer {
+          font-size: 192px;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .timer {
+          font-size: 232px;
+        }
+      }
+
+      @media (min-width: 1366px) {
+        .timer {
+          font-size: 272px;
+        }
       }
     </style>
-
-    <div class="card">
-      <div class="circle">1</div>
-      <h1>View One</h1>
-      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+    <div class="timer-wrapper flex">
+      <span class="timer">{{_remaining}}</span>
     </div>
-
+    <div class="controls layout horizontal">
+      <div class="flex pomodoros">
+        <div>
+          <iron-icon icon="pm:pomodoros"></iron-icon>
+          <span>{{status.pomodoros}}</span>
+        </div>
+      </div>
+      <div class="flex playstop">
+        <paper-fab icon="{{_controlIcon}}" on-tap="_onPlay"></paper-fab>
+      </div>
+      <div class="flex steps">
+        <div>
+          <iron-icon icon="pm:steps"></iron-icon>
+          <span>{{status.steps}}</span>
+        </div>
+      </div>
+    </div>
   </template>
-
   <script>
-
     Polymer({
-
       is: 'pm-timer',
+      properties: {
+        status: Object,
+        remaining: Number,
+        state: {
+          type: String,
+          computed: 'getState(status)',
+          reflectToAttribute: true,
+        },
+        _remaining: {
+          type: String,
+          computed: 'displayTime(remaining)',
+        },
+        _controlIcon: {
+          type: String,
+          computed: 'controlIcon(state)',
+        },
+      },
 
+      getState: function (status) {
+        return status.state;
+      },
+
+      displayTime: function (remaining) {
+        var min = ('00' + Math.floor(remaining / 60)).slice(-2);
+        var sec = ('00' + (remaining % 60)).slice(-2);
+        return min + ':' + sec;
+      },
+
+      controlIcon: function (state) {
+        if (state === 'stopped') {
+          return 'icons:play';
+        }
+
+        return 'icons:stop';
+      },
+
+      _onPlay: function () {
+        this.fire('play');
+      },
     });
-
   </script>
-
 </dom-module>

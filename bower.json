@@ -15,6 +15,7 @@
     "iron-media-query": "polymerelements/iron-media-query#^1.0.0",
     "iron-pages": "polymerelements/iron-pages#^1.0.0",
     "iron-selector": "polymerelements/iron-selector#^1.0.0",
+    "paper-fab": "polymerelements/paper-fab#^1.2.0",
     "paper-icon-button": "PolymerElements/paper-icon-button#~1.1.1",
     "polymer": "polymer/polymer#^1.4.0",
     "polymerfire": "firebase/polymerfire#^0.9.2"
