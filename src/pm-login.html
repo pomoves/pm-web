@@ -7,9 +7,9 @@
         display: block;
       }
     </style>
-    <span hidden$="[[user]]" on-tap="_login">Sign In</span>
+    <span hidden$="[[user]]" on-tap="_login">Login</span>
     <template is="dom-if" if="[[user]]">
-      <span on-tap="_logout">Sign Out</span>
+      <span on-tap="_logout">Logout</span>
     </template>
   </template>
   <script>
