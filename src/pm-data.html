@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 
 <dom-module id="pm-data">
   <template>
@@ -7,14 +8,30 @@
     <firebase-document
       id="config"
       path="/config/[[user.uid]]"
-      data="{{config}}">
+      data="{{fbConfig}}">
     </firebase-document>
+
+    <app-indexeddb-mirror
+      id="configMirror"
+      session="data"
+      key="/config/[[user.uid]]"
+      data="[[fbConfig]]"
+      persisted-data="{{config}}">
+    </app-indexeddb-mirror>
 
     <firebase-document
       id="status"
       path="/status/[[user.uid]]"
-      data="{{status}}">
+      data="{{fbStatus}}">
     </firebase-document>
+
+    <app-indexeddb-mirror
+      id="statusMirror"
+      session="data"
+      key="/status/[[user.uid]]"
+      data="[[fbStatus]]"
+      persisted-data="{{status}}">
+    </app-indexeddb-mirror>
 
   </template>
   <script>
@@ -61,6 +78,13 @@
             }
           });
         }
+      },
+
+      clear: function () {
+        this.$.configMirror.client.post({
+          type: 'app-mirror-validate-session',
+          session: 'null',
+        });
       },
     });
   </script>

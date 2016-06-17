@@ -83,7 +83,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <pm-analytics key="UA-59834006-3"></pm-analytics>
 
-    <pm-data user="[[user]]"></pm-data>
+    <pm-data id="appData" user="[[user]]"></pm-data>
 
     <app-location route="{{route}}"></app-location>
     <app-route
@@ -187,6 +187,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       logout: function () {
         this.$.auth.signOut();
+        this.$.appData.clear();
       },
 
     });
