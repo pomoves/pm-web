@@ -1,0 +1,67 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+
+<dom-module id="pm-data">
+  <template>
+
+    <firebase-document
+      id="config"
+      path="/config/[[user.uid]]"
+      data="{{config}}">
+    </firebase-document>
+
+    <firebase-document
+      id="status"
+      path="/status/[[user.uid]]"
+      data="{{status}}">
+    </firebase-document>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'pm-data',
+
+      properties: {
+        user: Object,
+        config: {
+          type: Object,
+          notify: true,
+        },
+        status: {
+          type: Object,
+          notify: true,
+        },
+      },
+
+      observers: [
+        'initUser(user.uid)',
+      ],
+
+      initUser: function (uid) {
+        if (uid) {
+          firebase.database().ref('/config/' + uid).once('value')
+          .then(function (snap) {
+            // new user, config is empty, so initalize config and status
+            if (!snap.val()) {
+              var update = {};
+              update['/config/' + uid] = {
+                focus: 25,
+                shortBreak: 5,
+                longBreak: 15,
+                cycle: 4,
+              };
+              update['/status/' + uid] = {
+                state: 'stopped',
+                steps: 0,
+                pomodoros: 0,
+                duration: 0,
+                startTime: 0,
+              };
+              firebase.database().ref().update(update);
+            }
+          });
+        }
+      },
+    });
+  </script>
+</dom-module>
