@@ -127,7 +127,7 @@
         },
         _controlIcon: {
           type: String,
-          computed: 'controlIcon(state)',
+          computed: 'controlIcon(status.state)',
         },
       },
 
@@ -142,11 +142,11 @@
       },
 
       controlIcon: function (state) {
-        if (state === 'stopped') {
-          return 'icons:play';
+        if (state && state !== 'stopped') {
+          return 'icons:stop';
         }
 
-        return 'icons:stop';
+        return 'icons:play';
       },
 
       _onPlay: function () {
