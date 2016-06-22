@@ -39,7 +39,10 @@
       is: 'pm-data',
 
       properties: {
-        user: Object,
+        user: {
+          type: Object,
+          observer: '_userChanged',
+        },
         config: {
           type: Object,
           notify: true,
@@ -50,33 +53,10 @@
         },
       },
 
-      observers: [
-        'initUser(user.uid)',
-      ],
-
-      initUser: function (uid) {
-        if (uid) {
-          firebase.database().ref('/config/' + uid).once('value')
-          .then(function (snap) {
-            // new user, config is empty, so initalize config and status
-            if (!snap.val()) {
-              var update = {};
-              update['/config/' + uid] = {
-                focus: 25,
-                shortBreak: 5,
-                longBreak: 15,
-                cycle: 4,
-              };
-              update['/status/' + uid] = {
-                state: 'stopped',
-                steps: 0,
-                pomodoros: 0,
-                duration: 0,
-                startTime: 0,
-              };
-              firebase.database().ref().update(update);
-            }
-          });
+      _userChanged: function (user, oldUser) {
+        this.clear();
+        if (!user && !oldUser) {
+          firebase.auth().signInAnonymously();
         }
       },
 

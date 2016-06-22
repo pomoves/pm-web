@@ -86,13 +86,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       storage-bucket="pomoves.appspot.com">
     </firebase-app>
 
-    <firebase-auth
-      id="auth"
-      provider="google"
-      signed-in="{{signedIn}}"
-      user="{{user}}">
-    </firebase-auth>
-
     <pm-analytics key="UA-59834006-3"></pm-analytics>
 
     <pm-data id="appData" user="[[user]]" config="{{config}}" status="{{status}}"></pm-data>
@@ -124,12 +117,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
             <div title>Pomoves</div>
-            <pm-login user="[[user]]" on-login="login" on-logout="logout"></pm-login>
+            <pm-login user="{{user}}" on-login="login" on-logout="logout"></pm-login>
           </app-toolbar>
         </app-header>
 
         <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
-          <pm-timer name="timer"status="[[status]]" remaining="[[remaining]]"></pm-timer>
+          <pm-timer name="timer" status="[[status]]" remaining="[[remaining]]"></pm-timer>
           <pm-tasks name="tasks"></pm-tasks>
           <pm-stats name="stats"></pm-stats>
         </iron-pages>
@@ -141,6 +134,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
+
+    function toSeconds(timeInMinutes) {
+      return timeInMinutes * 60;
+    }
 
     Polymer({
 
@@ -155,11 +152,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           reflectToAttribute: true,
           observer: '_pageChanged',
         },
-
       },
 
       observers: [
         '_routePageChanged(routeData.page)',
+        '_updateFocusTime(config.focus, status.state)',
       ],
 
       _routePageChanged: function (page) {
@@ -193,13 +190,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      login: function () {
-        this.$.auth.signInWithPopup();
+      logout: function () {
+        firebase.auth().signOut();
       },
 
-      logout: function () {
-        this.$.auth.signOut();
-        this.$.appData.clear();
+      _updateFocusTime: function (focus, state) {
+        if (state === 'stopped') {
+          var focusTime = toSeconds(focus);
+          this.set('status.duration', focusTime);
+          this.remaining = focusTime;
+        }
       },
 
     });

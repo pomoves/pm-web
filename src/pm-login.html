@@ -7,9 +7,9 @@
         display: block;
       }
     </style>
-    <span hidden$="[[user]]" on-tap="_login">Login</span>
+    <span hidden$="[[user]]" on-tap="login">Login</span>
     <template is="dom-if" if="[[user]]">
-      <span on-tap="_logout">Logout</span>
+      <span on-tap="logout">Logout</span>
     </template>
   </template>
   <script>
@@ -17,14 +17,27 @@
       is: 'pm-login',
 
       properties: {
-        user: Object,
+        user: {
+          type: Object,
+          notify: true,
+        },
       },
 
-      _login: function () {
-        this.fire('login');
+      ready: function () {
+        var auth = firebase.auth();
+        firebase.auth().onAuthStateChanged(function (user) {
+          this.user = user;
+          if (user) {
+            firebase.database().ref('/users').child(user.uid).set(true);
+          }
+        }.bind(this));
       },
 
-      _logout: function () {
+      login: function () {
+        firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
+      },
+
+      logout: function () {
         this.fire('logout');
       },
 
