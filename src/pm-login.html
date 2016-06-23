@@ -7,8 +7,8 @@
         display: block;
       }
     </style>
-    <span hidden$="[[user]]" on-tap="login">Login</span>
-    <template is="dom-if" if="[[user]]">
+    <span hidden$="[[user.email]]" on-tap="login">Login</span>
+    <template is="dom-if" if="[[user.email]]">
       <span on-tap="logout">Logout</span>
     </template>
   </template>
@@ -27,13 +27,11 @@
         var auth = firebase.auth();
         firebase.auth().onAuthStateChanged(function (user) {
           this.user = user;
-          if (user) {
-            firebase.database().ref('/users').child(user.uid).set(true);
-          }
         }.bind(this));
       },
 
       login: function () {
+        firebase.auth().signOut();
         firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
       },
 

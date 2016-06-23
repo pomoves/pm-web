@@ -53,18 +53,43 @@
         },
       },
 
-      _userChanged: function (user, oldUser) {
-        this.clear();
-        if (!user && !oldUser) {
+      _userChanged: function (user) {
+        this.clearData();
+
+        if (user) {
+          this.initUser();
+        } else {
           firebase.auth().signInAnonymously();
         }
       },
 
-      clear: function () {
-        this.$.configMirror.client.post({
-          type: 'app-mirror-validate-session',
-          session: 'null',
+      initUser: function () {
+        var uid = this.user.uid;
+        firebase.database().ref('users/' + uid).once('value').then(function (snap) {
+          // new user, config is empty, so initalize config and status
+          if (!snap.val()) {
+            var update = {};
+            update['users/' + uid] = true;
+            update['config/' + uid] = {
+              focus: 25,
+              shortBreak: 5,
+              longBreak: 15,
+              cycle: 4,
+            };
+            update['status/' + uid] = {
+              state: 'stopped',
+              steps: 0,
+              pomodoros: 0,
+              duration: 0,
+              startTime: 0,
+            };
+            firebase.database().ref().update(update);
+          }
         });
+      },
+
+      clearData: function () {
+        this.$.configMirror.client.validateSession(null);
       },
     });
   </script>
