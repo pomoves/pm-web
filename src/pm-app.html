@@ -122,7 +122,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-header>
 
         <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
-          <pm-timer name="timer" status="[[status]]" remaining="[[remaining]]"></pm-timer>
+          <pm-timer name="timer"
+                    status="[[status]]"
+                    remaining="[[remaining]]"
+                    on-play="_play"></pm-timer>
           <pm-tasks name="tasks"></pm-tasks>
           <pm-stats name="stats"></pm-stats>
         </iron-pages>
@@ -200,6 +203,67 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.set('status.duration', focusTime);
           this.remaining = focusTime;
         }
+      },
+
+      _play: function () {
+        this.status.duration = toSeconds(this.config.focus);
+        this.remaining = toSeconds(this.config.focus);
+        if (this.status.state === 'stopped') {
+          // this._checkNotifications();
+          this.status.state = 'focus';
+          this.status.startTime = Math.floor(new Date().getTime() / 1000);
+          this.timeout = setInterval(this._tick.bind(this), 1000);
+        } else {
+          this.status.state = 'stopped';
+        }
+
+        this.updateStatus();
+      },
+
+      _tick: function () {
+        if (this.status.state === 'stopped') {
+          clearInterval(this.timeout);
+          return;
+        }
+
+        this.remaining = this.status.duration -
+          (Math.floor(new Date().getTime() / 1000) - this.status.startTime);
+        if (this.remaining > 0) {
+          return;
+        }
+
+        // var tlentry = {
+        //   type: this.status.state,
+        //   start: this.status.startTime,
+        //   end: this.status.startTime + this.status.duration,
+        //   data: 1,
+        //   group: 'min',
+        // };
+        //
+        // this.push('timeline', tlentry);
+
+        this.status.startTime = this.status.startTime + this.status.duration;
+        if (this.status.state !== 'focus') {
+          this.remaining = toSeconds(this.config.focus);
+          this.status.state = 'focus';
+        } else {
+          this.status.pomodoros = this.status.pomodoros + 1;
+          this.remaining =
+            toSeconds((this.status.pomodoros % this.config.cycle === 0) ?
+              this.config.longBreak : this.config.shortBreak);
+          this.status.state = 'walk';
+        }
+
+        this.status.duration = this.remaining;
+        this.updateStatus();
+
+        // if (this.config.notify) {
+        //   this.notify();
+        // }
+      },
+
+      updateStatus: function () {
+        firebase.database().ref('status/' + this.user.uid).update(this.status);
       },
 
     });
